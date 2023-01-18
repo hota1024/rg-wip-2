@@ -9,6 +9,12 @@
   "dependencies": {
     "@slidev/cli": "^0.38.3",
     "@slidev/theme-default": "*",
-    "@slidev/theme-seriph": "*"
+    "@slidev/theme-seriph": "*",
+    "sass": "^1.57.1",
+    "slidev-theme-penguin": "^1.6.1",
+    "vite-svg-loader": "^4.0.0"
+  },
+  "devDependencies": {
+    "@iconify-json/logos": "^1.1.22"
   }
 }
