@@ -88,8 +88,6 @@ call $print
   - 四則演算, 基本的な論理演算(and, or, not)
   - 型: i32, i64, f32, f64, bool
 
-<img src="wasabi.png" width="200">
-
 ---
 ---
 
