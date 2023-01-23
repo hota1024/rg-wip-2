@@ -15,6 +15,7 @@
     "vite-svg-loader": "^4.0.0"
   },
   "devDependencies": {
-    "@iconify-json/logos": "^1.1.22"
+    "@iconify-json/logos": "^1.1.22",
+    "playwright-chromium": "^1.29.2"
   }
 }
