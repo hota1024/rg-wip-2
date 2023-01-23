@@ -1,4 +1,5 @@
 ---
+theme: geist
 layout: intro
 highlighter: shiki
 ---
@@ -17,9 +18,7 @@ hotaka B1 環境情報学部
 - 目的
 - 背景
 - WebAssembly について
-- Rust で出力した WebAssembly と JavaScript のベンチマーク
 - Wasabi 言語について
-- Wasabi 言語のベンチマークと考察
 - まとめ
 
 ---
@@ -41,7 +40,6 @@ WebAssembly は主に Rust や C++ といった低水準のプログラミング
 → それらを解決するような言語を開発することでゲーム開発やクリエイティブコーディングなどにおける大量のオブジェクトの処理などを簡単に書けるようにしたい。
 
 ---
-layout: two-cols
 ---
 
 # WebAssembly について
@@ -52,6 +50,17 @@ layout: two-cols
 - Webブラウザ以外の環境(OS上)でも動作するようになってきている
 - 低水準のホスト言語(Rust や C++)からコンパイルして利用する
 - DOM操作やブラウザのAPIを操作する際は JavaScript で定義した関数を呼び出して行う
+
+## 対応ブラウザの例
+
+- Google Chrome
+- Firefox
+- Safari
+
+---
+---
+
+# WebAssembly Text Format(WAT)
 
 ```
 ;; スタックマシンで処理される
@@ -67,12 +76,6 @@ i32.add
 i32.const 10
 call $print
 ```
-
-### 対応ブラウザの例
-
-- Google Chrome
-- Firefox
-- Safari
 
 ---
 ---
@@ -95,16 +98,6 @@ call $print
 
 `1 + 2` の結果を JavaScript の `print` 関数に渡すコード。
 
-<style>
-code {
-  line-height: 1.18em;
-}
-
-.highlighted {
-  background: rgba(0, 0, 0, 0.2);
-}
-</style>
-
 ```rust {0|1-4|5-9}
 // JavaScript の関数をインポート
 import js {
@@ -120,18 +113,20 @@ export fn main() {
 ---
 ---
 
-<style>
-.highlighted {
-  background: rgba(0, 0, 0, 0.2);
-}
-</style>
-
 # 実行までの流れ : WasabiからText Format(WAT)へのコンパイル
 
 Wasabi言語のコンパイラCLIの `wasa` を利用する。
 
-```shell {0|1|2|3-99}
+```shell
 $ ./wasa main.was > main.wat
+```
+
+---
+---
+
+# main.wat の内容
+
+```shell
 $ cat main.wat
 (module
   (import
@@ -185,4 +180,96 @@ const imports = {
 const { instance } = await WebAssembly.instantiateStreaming(fetch('/main.wasm'), imports)
 instance.exports.main()
 ```
+
+---
+---
+
+# 実行時のスクリーンショット
+
+環境: Brave
+
+<img src="screenshot.png" >
+
+---
+---
+
+# 構文紹介 : `import <モジュール名> { <関数定義...> }`
+
+JavaScript の `WebAssembly.instantiate` で渡された関数をインポートします。
+
+```rust {2-4}
+// Wasabi
+import js {
+  fn alert(i32);
+}
+```
+
+```javascript {3-7}
+// JavaScript
+WebAssembly.instantiate(source, {
+  js: {
+    alert(value) {
+      alert(value)
+    }
+  }
+})
+```
+
+---
+
+# 構文紹介 : `fn <関数名> (<引数...>): <返り値> { <本体> }`
+
+```rust
+// 返り値が無い場合は省略可能
+fn main() {
+  print(1 + 2);
+}
+```
+
+```rust
+fn add(a: i32, b: i32): i32 {
+  // return a + b;
+  a + b // ブロックの最後が式ならそのまま返り値になる。
+}
+```
+
+---
+
+# 構文紹介 : `let <変数名>: <型> = 初期化`
+
+ローカル変数を定義します。
+
+```rust
+fn main() {
+  let year: i32 = 2003;
+  let is_leap_year: bool = true;
+
+  // 型を省略すると初期化式から自動的に型が決定されます。
+  let radius = 10; // i32
+  let pi = 3.14;   // f64
+}
+```
+
+---
+
+# 構文紹介 : `while <式> { <処理> }`
+
+```rust
+fn main() {
+  let i = 0;
+
+  while i < 100 {
+    print(i);
+  };
+}
+```
+
+---
+
+# 今後の展望
+
+- 配列の実装
+- クラスや構造体の実装
+- TypeScript の型定義ファイルの生成
+- Language Server Protocol の対応
 
