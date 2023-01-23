@@ -1,5 +1,4 @@
 ---
-theme: penguin
 layout: intro
 highlighter: shiki
 ---
@@ -42,7 +41,7 @@ WebAssembly は主に Rust や C++ といった低水準のプログラミング
 → それらを解決するような言語を開発することでゲーム開発やクリエイティブコーディングなどにおける大量のオブジェクトの処理などを簡単に書けるようにしたい。
 
 ---
-layout: text-window
+layout: two-cols
 ---
 
 # WebAssembly について
@@ -53,8 +52,6 @@ layout: text-window
 - Webブラウザ以外の環境(OS上)でも動作するようになってきている
 - 低水準のホスト言語(Rust や C++)からコンパイルして利用する
 - DOM操作やブラウザのAPIを操作する際は JavaScript で定義した関数を呼び出して行う
-
-::window::
 
 ```
 ;; スタックマシンで処理される
@@ -78,7 +75,6 @@ call $print
 - Safari
 
 ---
-layout: text-window
 ---
 
 # Wasabi 言語
@@ -91,8 +87,6 @@ layout: text-window
   - if, while
   - 四則演算, 基本的な論理演算(and, or, not)
   - 型: i32, i64, f32, f64, bool
-
-::window::
 
 <img src="wasabi.png" width="200">
 
